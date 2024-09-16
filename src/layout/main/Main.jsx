@@ -7,7 +7,7 @@ export default function Main({ children }) {
     return (
 
 
-        <Box sx={{ p: '10px 0 30px', minHeight: '85vh', backgroundColor: isDark ? '#333333' : '#e3f2fd', color: isDark ? 'white' : 'black' }} >
+        <Box sx={{ p: '10px 0 30px', minHeight: '85vh', backgroundColor: isDark ? '#333333' : '#f5f5f5', color: isDark ? 'white' : 'black' }} >
             {children}
         </Box >
     )

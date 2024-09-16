@@ -1,24 +1,20 @@
 import React from "react";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+import { Box, Button, Paper } from "@mui/material";
+import PageHeader from "./PageHeader";
+import ROUTES from "../routes/routesModuel";
+import { useNavigate } from "react-router-dom";
 const Error = ({ errorMessage }) => {
+    const navigate = useNavigate();
+
     return (
         <Container>
-            <Grid container spacing={2}>
-                <Grid item xs={12} md={8}>
-                    <Typography variant="h5" color="initial">
-                        Oops... something went wrong: {errorMessage}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} md={4} justifyContent="center">
-                    <img
-                        width="100%"
-                        src="/robot.png"
-                        alt="broken robot"
-                    />
-                </Grid>
-            </Grid>
+            <PageHeader title='Error' subTitle={errorMessage} />
+            <Box sx={{ display: "flex", flexDirection: 'column', alignItems: 'center', width: '500px', margin: '0 auto' }}>
+                <img src='/images/robot.png' alt="robot" width='300px' />
+                <Paper sx={{ p: '10px', m: '10px' }}>{errorMessage}</Paper>
+                <Button onClick={() => navigate(ROUTES.ROOT)} variant='contained' >Return to main page</Button>
+            </Box>
         </Container>
     );
 };

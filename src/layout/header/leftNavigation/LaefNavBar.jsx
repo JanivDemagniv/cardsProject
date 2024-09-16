@@ -15,7 +15,7 @@ export default function LaefNavBar() {
             <NavBarItem to={ROUTES.CARDS} label={"Cards"} />
             <NavBarItem to={ROUTES.ABOUT} label={"About"} />
             {user && user.isAdmin ? <NavBarItem to={ROUTES.SANDBOX} label={"Sandbox"} /> : <></>}
-            {user && user.isBusiness ? <NavBarItem to={ROUTES.FAVOURITECARDS} label={"Favourite Cards"} /> : <></>}
+            {user ? <NavBarItem to={ROUTES.FAVOURITECARDS} label={"Favourite Cards"} /> : <></>}
             {user && user.isBusiness ? <NavBarItem to={ROUTES.MYCARDS} label={"My Cards"} /> : <></>}
         </Box>
     )

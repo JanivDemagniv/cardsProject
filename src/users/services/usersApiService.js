@@ -25,7 +25,8 @@ const signUp = async (userSignUp) => {
 
 const getUserData = async (id) => {
     try {
-        const response = await axios.post(apiUrl + '/' + id, userSignUp)
+        useAxios()
+        const response = await axios.get(apiUrl + '/' + id)
         const data = response.data;
         return data
     } catch (e) {
@@ -44,4 +45,15 @@ const getUserDeatails = async (id) => {
     }
 }
 
-export { getUserData, signUp, login, getUserDeatails }
+const updateUserDeatails = async (id, userData) => {
+    try {
+        useAxios();
+        let response = await axios.put(apiUrl + '/' + id, userData)
+        let data = response.data
+        return data
+    } catch (e) {
+        throw new Error(e.message)
+    }
+}
+
+export { getUserData, signUp, login, getUserDeatails, updateUserDeatails }

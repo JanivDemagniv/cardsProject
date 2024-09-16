@@ -1,60 +1,46 @@
-import React from 'react'
-import { Search } from "@mui/icons-material";
+import React, { useEffect, useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import { Box, FormControl, InputAdornment, OutlinedInput } from '@mui/material';
+import { useTheme } from '../../../providers/CustomThemeProvider';
+
 
 export default function SearchAera() {
-    const Search = styled('div')(({ theme }) => ({
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha(theme.palette.common.white, 0.15),
-        '&:hover': {
-            backgroundColor: alpha(theme.palette.common.white, 0.25),
-        },
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(1),
-            width: 'auto',
-        },
-    }));
+    const { isDark } = useTheme()
+    const [searchParams, setSearch] = useSearchParams();
+    const [query, setQuery] = useState(searchParams.get('query') || '');
+    const location = useLocation()
 
-    const SearchIconWrapper = styled('div')(({ theme }) => ({
-        padding: theme.spacing(0, 2),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }));
+    useEffect(() => {
+        if (query) {
+            setSearch({ query });
+        } else {
+            setSearch({})
+        }
+    }, [query, setSearch]);
 
-    const StyledInputBase = styled(InputBase)(({ theme }) => ({
-        color: 'inherit',
-        width: '100%',
-        '& .MuiInputBase-input': {
-            padding: theme.spacing(1, 1, 1, 0),
-            // vertical padding + font size from searchIcon
-            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-            transition: theme.transitions.create('width'),
-            [theme.breakpoints.up('sm')]: {
-                width: '12ch',
-                '&:focus': {
-                    width: '20ch',
-                },
-            },
-        },
-    }));
-    return (
-        <Search>
-            <SearchIconWrapper>
-                <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-            />
-        </Search>
-    )
+    const handleChange = (e) => {
+        setQuery(e.target.value)
+    }
+
+
+    if (location.pathname == '/cards' || location.pathname == '/mycards' || location.pathname == '/favouritecards')
+        return (
+            <Box>
+                <FormControl>
+                    <OutlinedInput
+                        size='small'
+                        placeholder='Search'
+                        value={query}
+                        onChange={handleChange}
+                        startAdornment={
+                            <InputAdornment position='start'>
+                                <SearchIcon aria-label='search' />
+                            </InputAdornment>
+                        }
+                        sx={{ backgroundColor: isDark ? '#222831' : '#f7f7f7' }}
+                    ></OutlinedInput>
+                </FormControl>
+            </Box>
+        )
 }

@@ -1,6 +1,8 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { createContext, useCallback, useContext, useState } from "react";
+
 const ThemeContext = createContext();
+
 export default function CustomThemeProvider({ children }) {
     const [isDark, setIsDark] = useState(false);
     const toggleDarkMode = useCallback(() => {
@@ -9,6 +11,12 @@ export default function CustomThemeProvider({ children }) {
     const theme = createTheme({
         palette: {
             mode: isDark ? "dark" : "light",
+            primary: {
+                main: '#E3D026',
+                light: '#E9DB5D',
+                dark: '#A29415',
+                contrastText: '#242105',
+            },
         },
     });
     return (

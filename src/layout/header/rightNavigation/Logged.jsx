@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
@@ -11,13 +11,25 @@ import ROUTES from "../../../routes/routesModuel";
 import PersonIcon from '@mui/icons-material/Person';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { getUser } from "../../../users/services/localStorageService";
 
 
 export default function Logged() {
     const { handleLogout } = useUsers()
     const { user } = useCurrentUser()
+    const [userPic, setUserPic] = useState(null)
     const [anchorEl, setAnchorEl] = useState(null);
+    const { handleUserDetails, userDetails } = useUsers()
     const open = Boolean(anchorEl);
+
+    useEffect(() => {
+        if (!user) {
+            getUser()
+        } else {
+            handleUserDetails(user._id)
+        }
+    }, [user])
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget)
     };
@@ -35,7 +47,7 @@ export default function Logged() {
                     aria-haspopup='true'
                     aria-expanded={open ? 'true' : undefined}
                     sx={{ p: 0, display: "inline-flex", marginLeft: 2 }}>
-                    <Avatar alt="avatar" src="/images/avatar.png" />
+                    <Avatar alt={userDetails ? userDetails.image.alt : "avatar"} src={userDetails ? userDetails.image.url : "/images/avatar.png"} />
                 </IconButton>
             </Tooltip>
             <Menu

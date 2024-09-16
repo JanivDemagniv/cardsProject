@@ -1,27 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CardComponent from './Card/CardComponent';
-import { Container } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import ROUTES from '../../routes/routesModuel';
+import { Box, Container, Pagination } from '@mui/material';
 import { useCurrentUser } from '../../users/porviders/UserProvider';
-import { useSnack } from '../../providers/SnakBarProvider';
+import useCards from '../hooks/useCards';
+import { useSearchParams } from 'react-router-dom';
 
-export default function Cards({ cards, handleDelete, handleLike }) {
-    const navigate = useNavigate()
-    const { user } = useCurrentUser()
-    const setSnack = useSnack()
-    const handleEdit = (card) => {
-        if (card.user_id == user._id || user.isAdmin) {
-            navigate(ROUTES.EDITCARD + '/' + card._id)
-        } else (setSnack('error', "You can't edit  this card"))
+export default function Cards({ cards }) {
+    const { handleEdit, handleLike, handleDelete } = useCards();
+    const { user } = useCurrentUser();
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemPerPage = 12;
+    const indexOfLastItem = currentPage * itemPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemPerPage;
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get('query' || '')
+
+
+    const filterData = query ? cards.filter((card) => card.title.includes(query)) : cards;
+    const currentItem = filterData.slice(indexOfFirstItem, indexOfLastItem);
+
+
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value)
     }
 
-
-
     return (
-        <Container sx={{ display: "flex", flexWrap: 'wrap', justifyContent: { xs: 'center', md: 'stretch' } }}>
-            {cards.map((card) => <CardComponent card={card} key={card._id} handleDelete={handleDelete} handleEdit={() => { handleEdit(card) }} handleLike={handleLike} />
-            )}
+        <Container >
+            <Box sx={{ display: "flex", flexWrap: 'wrap', justifyContent: { xs: 'center', md: 'stretch' } }}>
+                {currentItem.map((card) => <CardComponent card={card} key={card._id} handleDelete={() => { handleDelete(card) }} handleEdit={() => { handleEdit(card, user) }} handleLike={() => { handleLike(card._id) }} />
+                )}
+            </Box>
+            <Pagination
+                sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}
+                count={Math.ceil(cards.length / itemPerPage)}
+                page={currentPage}
+                onChange={handlePageChange}
+            />
         </Container>
     )
 }

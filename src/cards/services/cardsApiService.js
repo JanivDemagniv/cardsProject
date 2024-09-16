@@ -5,6 +5,27 @@ export const apiUrl = "https://monkfish-app-z9uza.ondigitalocean.app/bcard2/card
 
 useAxios()
 
+
+export const getCards = async () => {
+    try {
+        const response = await axios.get(apiUrl);
+        const data = response.data;
+        return data
+    } catch (e) {
+        throw new Error(e.message)
+    }
+}
+
+export const getCardById = async (id) => {
+    try {
+        const response = await axios.get(apiUrl + '/' + id);
+        const data = response.data;
+        return data;
+    } catch (e) {
+        throw new Error(e.message)
+    }
+}
+
 export const createCardRequest = async (card) => {
     try {
         const response = await axios.post(apiUrl, card)
@@ -35,4 +56,22 @@ export const getMyCards = async () => {
     }
 }
 
+export const likeCard = async (id) => {
+    try {
+        const response = await axios.patch(`${apiUrl}/${id}`, id)
+        const data = response.data;
+        return data
+    } catch (e) {
+        throw new Error(e.message)
+    }
+}
 
+export const deleteCard = async (cardId) => {
+    try {
+        const response = await axios.delete(apiUrl + '/' + cardId);
+        const data = response.data
+        return data
+    } catch (e) {
+        throw new Error(e.message)
+    }
+}

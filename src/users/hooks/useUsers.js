@@ -1,15 +1,17 @@
 import { useCallback, useState } from "react";
 import { useCurrentUser } from "../porviders/UserProvider";
-import { getUserData, getUserDeatails, login, signUp } from "../services/usersApiService";
+import { getUserDeatails, login, signUp, updateUserDeatails } from "../services/usersApiService";
 import { getUser, removeToken, setTokenInLocalStorage } from "../services/localStorageService";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/routesModuel";
 import normalizeUser from "../helpers/normalization/normalizeUser";
 import { useSnack } from "../../providers/SnakBarProvider";
+import normalizeUpdateUser from "../helpers/normalization/normlizeUpdateUser";
 
 export default function useUsers() {
     const [isLoading, setIsLoading] = useState();
     const [error, setError] = useState();
+    const [userDetails, setUserDetails] = useState('')
     const { setUser, setToken } = useCurrentUser();
     const navigate = useNavigate()
     const setSnack = useSnack()
@@ -35,6 +37,7 @@ export default function useUsers() {
     const handleLogout = useCallback(() => {
         removeToken();
         setUser(null);
+        navigate(ROUTES.ROOT)
         setSnack('success', 'You logged Out')
     }, []);
 
@@ -53,15 +56,33 @@ export default function useUsers() {
     }, [])
 
     const handleUserDetails = useCallback(async (id) => {
+        setIsLoading(true)
         try {
             let userInfo = await getUserDeatails(id)
-            return userInfo
+            setUserDetails(userInfo);
+            setSnack('success', 'information has been loaded')
         } catch (e) {
-            throw new Error(e.message)
+            setError(e)
+            setSnack('error', e.message)
         }
+        setIsLoading(false)
+    }, [])
+
+    const handleUpdateUserDetails = useCallback(async (id, cardData) => {
+        setIsLoading(true)
+        try {
+            const updateUserData = normalizeUpdateUser(cardData)
+            await updateUserDeatails(id, updateUserData)
+            setSnack('success', 'Your details have been updated')
+            navigate(ROUTES.PROFILE)
+        } catch (e) {
+            setError(e)
+            setSnack('error', e.message)
+        }
+        setIsLoading(false)
     }, [])
 
     return {
-        isLoading, error, handleLogin, handleLogout, handleSignup, handleUserDetails
+        isLoading, error, handleLogin, handleLogout, handleSignup, handleUserDetails, userDetails, handleUpdateUserDetails
     }
 }

@@ -2,12 +2,13 @@ import React from 'react'
 import { useCurrentUser } from '../../users/porviders/UserProvider'
 import { Navigate } from 'react-router-dom'
 import ROUTES from '../../routes/routesModuel'
-import { Container } from '@mui/material'
+import { Box, Container } from '@mui/material'
 import useForm from '../../forms/hooks/useForm'
 import initialCardForm from '../helpers/initialForms/initialCardForm'
 import { cardSchema } from '../models/cardSchema'
 import CardForm from '../components/CardForm'
 import useCards from '../hooks/useCards'
+import PageHeader from '../../components/PageHeader'
 
 
 export default function AddCardPage() {
@@ -26,22 +27,23 @@ export default function AddCardPage() {
 
     if (!user) return <Navigate to={ROUTES.ROOT} replace />
     return (
-        <Container
-            sx={{
-                paddingTop: 8,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-            }}
-        >
-            <CardForm
-                onSubmit={onSubmit}
-                onReset={handleReset}
-                validateForm={validateForm}
-                title={"Add New Card"}
-                errors={errors}
-                data={data}
-                onInputChange={handleChange} />
+        <Container>
+            <PageHeader title='Add New Card' />
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}>
+                <CardForm
+                    onSubmit={onSubmit}
+                    onReset={handleReset}
+                    validateForm={validateForm}
+                    title={"Add Card Form"}
+                    errors={errors}
+                    data={data}
+                    onInputChange={handleChange} />
+            </Box>
         </Container>
     )
 }

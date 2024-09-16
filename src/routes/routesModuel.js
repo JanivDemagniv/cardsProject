@@ -10,7 +10,8 @@ const ROUTES = {
     CARDINFO: '/card-info',
     ADDCARD: '/add-card',
     PROFILE: '/profile',
-    EDITCARD: '/edit-card'
+    EDITCARD: '/edit-card',
+    EDITPROFILE: '/edit-profile'
 }
 
 export default ROUTES

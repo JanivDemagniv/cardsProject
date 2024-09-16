@@ -13,7 +13,7 @@ export default function MyCards() {
 
     useEffect(() => {
         handleMyCards();
-    }, [])
+    }, [user])
 
     if (!user) return <Navigate to={ROUTES.ROOT} replace />
     if (!cardsData) return <Navigate to={ROUTES.CARDS} replace />

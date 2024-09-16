@@ -13,11 +13,14 @@ import CardDetailPage from '../cards/pages/CardDetailPage'
 import AddCardPage from '../cards/pages/AddCardPage'
 import Profile from '../users/pages/Profile'
 import EditCardPage from '../cards/pages/EditCardPage'
+import EditProfile from '../users/components/EditProfile'
+import EditProfilePage from '../users/pages/EditProfilePage'
+import Main from '../pages/Main'
 
 export default function Router() {
     return (
         <Routes>
-            <Route path={ROUTES.ROOT} element={<CardsPage />} />
+            <Route path={ROUTES.ROOT} element={<Main />} />
             <Route path={ROUTES.CARDS} element={<CardsPage />} />
             <Route path={ROUTES.ABOUT} element={<About />} />
             <Route path={ROUTES.FAVOURITECARDS} element={<FavouriteCards />} />
@@ -28,6 +31,7 @@ export default function Router() {
             <Route path={ROUTES.ADDCARD} element={<AddCardPage />} />
             <Route path={ROUTES.CARDINFO + '/:id'} element={<CardDetailPage />} />
             <Route path={ROUTES.PROFILE} element={<Profile />} />
+            <Route path={ROUTES.EDITPROFILE} element={<EditProfilePage />} />
             <Route path={ROUTES.EDITCARD + '/:id'} element={<EditCardPage />} />
             <Route path='*' element={<Error />} />
         </Routes>

@@ -7,7 +7,7 @@ export default function LogoIcon() {
     return (
         <NavBarLink to={ROUTES.ROOT}>
             <IconButton>
-                <Avatar alt='LogoIcon' src='/images/logoPic.png' />
+                <img style={{ width: '30px' }} alt='LogoIcon' src='/favicon.svg' />
             </IconButton>
         </NavBarLink>
     )

@@ -8,7 +8,7 @@ export default function Logo({ sx }) {
     const { isDark } = useTheme()
     return (
         <NavBarLink sx={{ ...sx }} to={ROUTES.ROOT}>
-            <Typography sx={{ display: { xs: 'none', md: 'inline-flex', alignSelf: 'center' }, fontFamily: 'fantasy', color: isDark ? 'white' : 'black' }} variant='h4' component="h1">BCard</Typography>
+            <Typography sx={{ display: { xs: 'none', md: 'inline-flex', alignSelf: 'center' }, fontFamily: 'fantasy', color: isDark ? 'white' : 'black', position: 'relative', top: '7px' }} variant='h4' component="h1">BCard</Typography>
         </NavBarLink>
     )
 }

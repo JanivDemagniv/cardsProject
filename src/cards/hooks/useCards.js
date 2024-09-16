@@ -1,25 +1,37 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSnack } from "../../providers/SnakBarProvider";
-import axios from "axios";
 import normalizeCard from "../helpers/normalization/normalizeCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ROUTES from "../../routes/routesModuel";
-import { createCardRequest, getMyCards } from "../services/cardsApiService";
+import { createCardRequest, deleteCard, getCardById, getCards, getMyCards, likeCard, sendUpdateCard } from "../services/cardsApiService";
+import { useCurrentUser } from "../../users/porviders/UserProvider";
+import dummyCard from "../../helpers/dummyCard";
 
 export default function useCards() {
     const navigate = useNavigate()
 
     const [cardsData, setCardsData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true)
-    const [error, setError] = useState()
-    const [cardData, setCardData] = useState([])
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState();
+    const [cardData, setCardData] = useState();
+    const [likedCards, setLikedCards] = useState([]);
+    const [like, setLike] = useState(false);
+    const { user } = useCurrentUser();
+    const [searchParams] = useSearchParams();
+
 
     const setSnack = useSnack()
 
-    const getCards = useCallback(async () => {
+    const handleGetDummyCard = useCallback(() => {
+        setIsLoading(true)
+        setCardData(dummyCard);
+        setIsLoading(false);
+    }, [])
+
+    const handleGetCards = useCallback(async () => {
         try {
-            let response = await axios.get('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards');
-            setCardsData(response.data)
+            let response = await getCards();
+            setCardsData(response)
             setSnack('success', 'all Card are loaded')
         } catch (err) {
             setError(err.message)
@@ -27,22 +39,59 @@ export default function useCards() {
         setIsLoading(false)
     }, []);
 
-    const getCardbyId = useCallback(async (id) => {
+    const handleGetCardbyId = useCallback(async (id) => {
         setIsLoading(true)
         try {
-            let response = await axios.get('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/' + id);
-            setCardData(response.data)
+            const response = await getCardById(id);
+            setCardData(response)
         } catch (err) {
             setError(err.message)
         }
         setIsLoading(false)
     }, []);
 
-    const handleLike = useCallback((id) => {
-        console.log(`This card ${id} has been liked`);
+    const handleLike = useCallback(async (id) => {
+        try {
+            await likeCard(id);
+            setSnack('success', 'Your Requeset have been updated')
+        } catch (e) {
+            setError(e)
+            setSnack('error', e.message)
+        }
+    }, [like]);
+
+    const getLikedCards = useCallback(async () => {
+        setIsLoading(true)
+        try {
+            const cards = await getCards();
+            const favCards = cards.filter((card) => card.likes.includes(user._id))
+            setLikedCards(favCards)
+            setSnack('success', 'all Cards Updated')
+        } catch (e) {
+            setError(e)
+            setSnack('error', e.message)
+        }
+        setIsLoading(false)
     }, [])
-    const handleDelete = useCallback((id) => {
-        console.log(`Deleting the ${id} card`);
+
+
+    const handleDelete = useCallback(async (card) => {
+        setIsLoading(true)
+        try {
+            await deleteCard(card._id);
+            setSnack('success', 'The Card has been deleted');
+            navigate(ROUTES.ROOT)
+        } catch (e) {
+            setError(e)
+            setSnack('error', e.message)
+        }
+        setIsLoading(false)
+    }, [])
+
+    const handleEdit = useCallback((card, user) => {
+        if (card.user_id == user._id || user.isAdmin) {
+            navigate(ROUTES.EDITCARD + '/' + card._id)
+        } else (setSnack('error', "You can't edit  this card"))
     }, [])
 
     const handleCreateCard = async (card) => {
@@ -50,6 +99,7 @@ export default function useCards() {
         try {
             let addCard = normalizeCard(card);
             const newCard = await createCardRequest(addCard);
+            setSnack('success', "Card is created")
             navigate(ROUTES.CARDINFO + '/' + newCard._id)
         } catch (e) {
             setError(e);
@@ -63,7 +113,8 @@ export default function useCards() {
         try {
             let updateCard = normalizeCard(card);
             const updatedCard = await sendUpdateCard(updateCard, id)
-            navigate(ROUTES.CARDINFO + '/' + updateCard._id)
+            setSnack('success', "Card is Updated")
+            navigate(ROUTES.CARDINFO + "/" + id)
         } catch (e) {
             setError(e)
             setSnack('error', e.message)
@@ -83,5 +134,5 @@ export default function useCards() {
         setIsLoading(false)
     }
 
-    return { handleMyCards, cardData, setCardData, getCardbyId, cardsData, isLoading, error, setSnack, getCards, handleLike, handleDelete, handleCreateCard, handleUpdateCard }
+    return { handleMyCards, cardData, handleGetCardbyId, handleGetDummyCard, cardsData, isLoading, error, setSnack, handleGetCards, handleLike, handleDelete, handleCreateCard, handleUpdateCard, handleEdit, getLikedCards, likedCards, like, setLike }
 }

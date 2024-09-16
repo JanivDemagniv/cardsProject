@@ -14,8 +14,8 @@ export default function Footer() {
         <Paper elevation={3} sx={{ position: 'sticky', bottom: 0, left: 0, right: 0 }}>
             <BottomNavigation showLabels>
                 <BottomNavigationAction onClick={() => navigation(ROUTES.ABOUT)} label="About" icon={<InfoIcon />} />
-                {user ? <BottomNavigationAction onClick={() => navigation(ROUTES.FAVOURITECARDS)} label="Favorites" icon={<FavoriteIcon />} /> : <></>}
-                {user && user.isBusiness ? <BottomNavigationAction onClick={() => navigation(ROUTES.MYCARDS)} label="My Cards" icon={<StyleIcon />} /> : <></>}
+                {user ? <BottomNavigationAction onClick={() => navigation(ROUTES.FAVOURITECARDS)} label="Favorites" icon={<FavoriteIcon />} /> : null}
+                {user && user.isBusiness ? <BottomNavigationAction onClick={() => navigation(ROUTES.MYCARDS)} label="My Cards" icon={<StyleIcon />} /> : null}
 
             </BottomNavigation >
         </Paper>

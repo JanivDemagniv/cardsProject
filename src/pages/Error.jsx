@@ -1,6 +1,6 @@
 import React from 'react'
 import PageHeader from '../components/PageHeader'
-import { Button } from '@mui/material'
+import { Box, Button, Paper } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from '../routes/routesModuel'
 
@@ -10,11 +10,12 @@ export default function Error() {
     const navigate = useNavigate()
     return (
         <>
-            <PageHeader title={"Eror 404"} subTitle={"Page not found"} />
-            <div style={{ display: 'flex', width: '500px', margin: '0 auto' }}>
-                <Button onClick={() => navigate(ROUTES.ROOT)}>Return to main page</Button>
-                <img src='/images/robot.png' alt="robot" />
-            </div>
+            <PageHeader title={"Error 404"} subTitle={"Page not found"} />
+            <Box sx={{ display: "flex", flexDirection: 'column', alignItems: 'center', width: '500px', margin: '0 auto' }}>
+                <img src='/images/robot.png' alt="robot" width='300px' />
+                <Paper sx={{ p: '10px', m: '10px' }}>There is No Page Like That</Paper>
+                <Button onClick={() => navigate(ROUTES.ROOT)} variant='contained' >Return to main page</Button>
+            </Box>
         </>
     )
 }

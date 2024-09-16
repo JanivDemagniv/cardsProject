@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import PageHeader from '../../components/PageHeader'
-import Cards from '../components/Cards'
-import Footer from '../../layout/footer/Footer'
-import axios from 'axios'
 import CardsFeedback from '../components/CardsFeedback'
 import useCards from '../hooks/useCards'
 import AddNewCardButton from '../components/AddNewCardButton'
+import { useCurrentUser } from '../../users/porviders/UserProvider'
+
 
 
 export default function CardsPage() {
-    const { cardsData, isLoading, error, getCards, handleLike, handleDelete } = useCards()
+    const { cardsData, isLoading, error, handleGetCards } = useCards()
+    const { user } = useCurrentUser()
 
     useEffect(() => {
-        getCards();
+        handleGetCards();
     }, [])
 
     return (
         <div>
             <PageHeader title={"Cards"} subTitle={"On this page you can find all bussines cards from all categories"} />
-            <CardsFeedback cards={cardsData} handleDelete={handleDelete} handleLike={handleLike} error={error} isLoading={isLoading} />
-            <AddNewCardButton />
+            <CardsFeedback cards={cardsData} error={error} isLoading={isLoading} />
+            {user && user.isBusiness ? <AddNewCardButton /> : <span></span>}
         </div>
     )
 }
